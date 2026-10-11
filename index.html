@@ -6,42 +6,83 @@
 <title>My Tracker</title>
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#1d5f7a">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
-:root{--bg:#eef3f6;--card:#fff;--ink:#14252e;--muted:#66808d;--line:#d5e0e6;--done:#1f9d7a;--left:#f0a04b;--accent:#1d5f7a;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a20;--card:#172830;--ink:#e6f0f4;--muted:#8ba5b2;--line:#28414c;--done:#39c29b;--left:#e8a25a;--accent:#6cc1de}}
-:root[data-theme="dark"]{--bg:#0f1a20;--card:#172830;--ink:#e6f0f4;--muted:#8ba5b2;--line:#28414c;--done:#39c29b;--left:#e8a25a;--accent:#6cc1de}
+:root{
+  --bg:#131214;--bg2:#0c0c0d;
+  --card:#1a1a1d;--card2:#1e1e22;
+  --ink:#ece9e6;--muted:#8d8a86;--line:#2b2a2c;
+  --done:#8fb89c;--done2:#749e82;
+  --left:#cf9c6c;--left2:#b3835a;
+  --accent:#c3a06a;--accent2:#a5854f;
+  --shadow-d:rgba(0,0,0,.5);--shadow-l:rgba(255,255,255,.02);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f2f0ec;--bg2:#eae7e1;
+  --card:#ffffff;--card2:#f7f5f1;
+  --ink:#26241f;--muted:#77726a;--line:#e2ded5;
+  --done:#4f8f68;--done2:#437a58;
+  --left:#b97a44;--left2:#a2683a;
+  --accent:#9c7c42;--accent2:#856938;
+  --shadow-d:rgba(90,80,60,.16);--shadow-l:rgba(255,255,255,.85)
+}}
+:root[data-theme="light"]{
+  --bg:#f2f0ec;--bg2:#eae7e1;
+  --card:#ffffff;--card2:#f7f5f1;
+  --ink:#26241f;--muted:#77726a;--line:#e2ded5;
+  --done:#4f8f68;--done2:#437a58;
+  --left:#b97a44;--left2:#a2683a;
+  --accent:#9c7c42;--accent2:#856938;
+  --shadow-d:rgba(90,80,60,.16);--shadow-l:rgba(255,255,255,.85)
+}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Segoe UI",sans-serif;line-height:1.4}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito","Segoe UI",sans-serif;font-weight:500;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
 main{max-width:640px;margin:0 auto;padding:16px}
-h1{font-size:1.5rem;margin:8px 0 2px}
-h2{font-size:1.1rem;margin:0 0 10px}
+h1{font-size:1.5rem;font-weight:700;margin:8px 0 2px;letter-spacing:.2px}
+h2{font-size:1.1rem;font-weight:700;margin:0 0 10px;letter-spacing:.2px}
 .sub{color:var(--muted);margin:0 0 14px}
-.tabs{display:flex;gap:8px;margin-bottom:14px}
-.tabs button{flex:1;padding:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font-size:1rem;cursor:pointer}
-.tabs button.on{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:bold}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.tabs{display:flex;gap:10px;margin-bottom:16px}
+.tabs button{flex:1;padding:11px;border:none;background:var(--card);color:var(--muted);border-radius:16px;font-size:1rem;font-family:inherit;font-weight:600;cursor:pointer;
+  box-shadow:4px 4px 10px var(--shadow-d),-2px -2px 6px var(--shadow-l);transition:box-shadow .2s,transform .2s}
+.tabs button.on{background:var(--accent2);color:#161513;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 3px 10px rgba(0,0,0,.35)}
+.card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:16px;
+  box-shadow:6px 6px 16px var(--shadow-d),-3px -3px 10px var(--shadow-l);border:1px solid rgba(255,255,255,.02)}
 .row{display:flex;gap:8px;align-items:center}
-input[type=text],input[type=number],select{flex:1;min-width:0;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:1rem}
-button.go{padding:10px 14px;border:0;border-radius:8px;background:var(--accent);color:var(--bg);font-size:1rem;cursor:pointer}
-button.small{border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;padding:4px 8px;cursor:pointer}
+input[type=text],input[type=number],select{flex:1;min-width:0;padding:11px;border:none;border-radius:12px;background:var(--bg);color:var(--ink);font-size:1rem;font-family:inherit;
+  box-shadow:inset 2px 2px 6px var(--shadow-d),inset -1px -1px 4px var(--shadow-l)}
+textarea{width:100%;min-height:160px;padding:12px;border:none;border-radius:12px;background:var(--bg);color:var(--ink);font-size:1rem;font-family:inherit;resize:vertical;line-height:1.5;
+  box-shadow:inset 2px 2px 6px var(--shadow-d),inset -1px -1px 4px var(--shadow-l)}
+button.go{padding:11px 16px;border:none;border-radius:12px;background:var(--accent2);color:#161513;font-size:1rem;font-family:inherit;font-weight:700;cursor:pointer;
+  box-shadow:3px 3px 9px var(--shadow-d),-2px -2px 6px var(--shadow-l);transition:box-shadow .15s,transform .15s}
+button.go:active{box-shadow:inset 2px 2px 6px rgba(0,0,0,.4),inset -1px -1px 4px rgba(255,255,255,.03);transform:translateY(1px)}
+button.small{border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--muted);border-radius:10px;padding:5px 10px;font-family:inherit;font-weight:600;cursor:pointer;transition:background .15s}
+button.small:hover{background:rgba(255,255,255,.06)}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 ul{list-style:none;margin:10px 0 0;padding:0}
-li{display:flex;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+li{display:flex;gap:8px;align-items:center;padding:10px 4px;border-radius:12px;transition:background .15s}
+li:not(:first-child){margin-top:2px}
 li span.t{flex:1;word-break:break-word}
 li.done span.t{text-decoration:line-through;color:var(--muted)}
 li input[type=checkbox]{width:22px;height:22px;accent-color:var(--done)}
 li input[type=number]{flex:0 0 90px}
 canvas{width:100%;display:block}
-.pie{max-width:230px;margin:0 auto}
+.pie{max-width:230px;margin:0 auto;border-radius:50%}
+.pie canvas{filter:drop-shadow(0 8px 18px var(--shadow-d))}
+.pie.complete{animation:glowPulse 1.4s ease-in-out 2}
+@keyframes glowPulse{0%,100%{filter:drop-shadow(0 8px 18px var(--shadow-d))}50%{filter:drop-shadow(0 0 24px rgba(143,184,156,.45))}}
 .empty{color:var(--muted);margin:8px 0 0}
 details{border-top:1px solid var(--line);padding:8px 0}
 summary{cursor:pointer}
 .hide{display:none}
 .streak{color:var(--left)}
+.flame{display:inline-block}
 table.wk{width:100%;border-collapse:collapse;text-align:center}
 table.wk td,table.wk th{padding:6px 3px;border-top:1px solid var(--line);font-size:.9rem}
 table.wk td:first-child,table.wk th:first-child{text-align:left}
@@ -52,7 +93,7 @@ table.wk td:first-child,table.wk th:first-child{text-align:left}
 <h1>My Tracker</h1>
 <p class="sub" id="dateText"></p>
 <p class="sub"><span id="syncText">Saved on this device only</span> <button class="small hide" id="logoutBtn">Log out</button></p>
-<div class="card hide" id="loginBox">
+<div class="card" id="loginBox">
   <h2>Sign in to sync your phone and laptop</h2>
   <div class="row"><input type="text" id="email" placeholder="Email"></div>
   <div class="row" style="margin-top:8px"><input type="password" id="password" placeholder="Password (6+ characters)" style="flex:1;min-width:0;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:1rem"></div>
@@ -62,6 +103,7 @@ table.wk td:first-child,table.wk th:first-child{text-align:left}
 <div class="tabs">
   <button id="tabTodo" class="on">To-do list</button>
   <button id="tabHabit">Habits</button>
+  <button id="tabNotes">Notes</button>
 </div>
 
 <section id="todoPage">
@@ -111,6 +153,19 @@ table.wk td:first-child,table.wk th:first-child{text-align:left}
     <p class="empty" id="graphEmpty">Add a number habit to see its graph.</p>
   </div>
 </section>
+
+<section id="notesPage" class="hide">
+  <div class="card">
+    <h2>Today's notes</h2>
+    <p class="sub">A few pointers for the day. Saved as you type.</p>
+    <textarea id="notesInput" placeholder="e.g. Call the dentist, finish the DBMS assignment, buy groceries..."></textarea>
+    <p class="empty" id="notesSaved"></p>
+  </div>
+  <div class="card">
+    <h2>Past notes</h2>
+    <div id="notesHistory"></div>
+  </div>
+</section>
 <div class="card">
   <h2>Backup</h2>
   <p class="sub">Your data lives in this browser. Save a backup file now and then.</p>
@@ -124,19 +179,20 @@ table.wk td:first-child,table.wk th:first-child{text-align:left}
 
 <script>
 // ---------- saved data ----------
-var data = { todos: {}, habits: [], logs: {} };
+var data = { todos: {}, habits: [], logs: {}, notes: {} };
 var currentTab = "todo";
 var db = null, user = null, saveTimer = null;
 
 // ---- paste your Supabase values here ----
-var SUPABASE_URL = "https://viixqvncpriknmzvpfdv.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpaXhxdm5jcHJpa25tenZwZmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NzcyNjUsImV4cCI6MjEwNjE1MzI2NX0.AJ32bV7ex4cED_Q6aJP9MsHMqFlQGstyHQlPVUH1HtE";
+var SUPABASE_URL = "PASTE_YOUR_PROJECT_URL";
+var SUPABASE_KEY = "PASTE_YOUR_ANON_KEY";
 
 function loadData() {
   try {
     var saved = localStorage.getItem("myTrackerData");
     if (saved) { data = JSON.parse(saved); }
   } catch (e) { }
+  if (!data.notes) { data.notes = {}; }
 }
 function saveData() {
   try { localStorage.setItem("myTrackerData", JSON.stringify(data)); } catch (e) { }
@@ -158,24 +214,41 @@ function css(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
+var REDUCE_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function tween(opts) {
+  if (REDUCE_MOTION) { opts.duration = 0; }
+  return anime(opts);
+}
+
+// tactile press feedback on any button
+document.addEventListener("click", function (e) {
+  var btn = e.target.closest("button");
+  if (btn) { tween({ targets: btn, scale: [1, 0.93, 1], duration: 220, easing: "easeOutQuad" }); }
+});
+
 // ---------- pie chart ----------
-function drawPie(canvas, done, total) {
+var pieStates = {}, pieAnims = {};
+function paintPie(canvas, frac, shownDone, total) {
   var c = canvas.getContext("2d");
   var w = canvas.width;
   c.clearRect(0, 0, w, w);
   var cx = w / 2, r = w / 2 - 10;
+  var leftGrad = c.createRadialGradient(cx, cx, r * 0.55, cx, cx, r);
+  leftGrad.addColorStop(0, css("--left")); leftGrad.addColorStop(1, css("--left2"));
+  var doneGrad = c.createRadialGradient(cx, cx, r * 0.55, cx, cx, r);
+  doneGrad.addColorStop(0, css("--done")); doneGrad.addColorStop(1, css("--done2"));
   if (total === 0) {
     c.beginPath(); c.arc(cx, cx, r, 0, Math.PI * 2);
     c.fillStyle = css("--line"); c.fill();
   } else {
-    var doneAngle = (done / total) * Math.PI * 2;
+    var doneAngle = frac * Math.PI * 2;
     var start = -Math.PI / 2;
     c.beginPath(); c.moveTo(cx, cx); c.arc(cx, cx, r, 0, Math.PI * 2);
-    c.fillStyle = css("--left"); c.fill();
-    if (done > 0) {
+    c.fillStyle = leftGrad; c.fill();
+    if (frac > 0) {
       c.beginPath(); c.moveTo(cx, cx);
       c.arc(cx, cx, r, start, start + doneAngle);
-      c.fillStyle = css("--done"); c.fill();
+      c.fillStyle = doneGrad; c.fill();
     }
   }
   // hole in the middle
@@ -184,10 +257,32 @@ function drawPie(canvas, done, total) {
   c.fillStyle = css("--ink");
   c.textAlign = "center"; c.textBaseline = "middle";
   c.font = "bold 44px Trebuchet MS, sans-serif";
-  c.fillText(done + "/" + total, cx, cx - 8);
+  c.fillText(shownDone + "/" + total, cx, cx - 8);
   c.font = "20px Trebuchet MS, sans-serif";
   c.fillStyle = css("--muted");
   c.fillText(total === 0 ? "nothing yet" : "done", cx, cx + 28);
+}
+var pieCompleteState = {};
+function drawPie(canvas, done, total) {
+  var prev = pieStates[canvas.id] || { frac: 0, shown: 0 };
+  var state = { frac: prev.frac, shown: prev.shown };
+  pieStates[canvas.id] = state;
+  if (pieAnims[canvas.id]) { pieAnims[canvas.id].pause(); }
+  var targetFrac = total === 0 ? 0 : done / total;
+  pieAnims[canvas.id] = tween({
+    targets: state,
+    frac: targetFrac,
+    shown: done,
+    duration: 550,
+    easing: "easeOutCubic",
+    update: function () { paintPie(canvas, state.frac, Math.round(state.shown), total); }
+  });
+  var wrap = canvas.closest(".pie");
+  var justCompleted = total > 0 && done === total && pieCompleteState[canvas.id] !== true;
+  pieCompleteState[canvas.id] = total > 0 && done === total;
+  if (wrap && justCompleted && !REDUCE_MOTION) {
+    wrap.classList.remove("complete"); void wrap.offsetWidth; wrap.classList.add("complete");
+  }
 }
 
 // ---------- to-do list ----------
@@ -210,7 +305,13 @@ function renderTasks() {
       var box = document.createElement("input");
       box.type = "checkbox"; box.checked = t.done;
       box.setAttribute("aria-label", "Mark done: " + t.text);
-      box.onchange = function () { t.done = box.checked; saveData(); renderTasks(); };
+      box.onchange = function () {
+        t.done = box.checked; saveData();
+        if (box.checked && !REDUCE_MOTION) {
+          tween({ targets: box, scale: [1, 1.5, 1], duration: 320, easing: "easeOutElastic(1, .6)" });
+          setTimeout(renderTasks, 180);
+        } else { renderTasks(); }
+      };
       var span = document.createElement("span");
       span.className = "t"; span.textContent = t.text;
       var edit = document.createElement("button");
@@ -221,7 +322,11 @@ function renderTasks() {
       };
       var del = document.createElement("button");
       del.className = "small"; del.textContent = "Delete";
-      del.onclick = function () { tasks.splice(i, 1); saveData(); renderTasks(); };
+      del.onclick = function () {
+        if (REDUCE_MOTION) { tasks.splice(i, 1); saveData(); renderTasks(); return; }
+        tween({ targets: li, opacity: [1, 0], translateX: [0, 40], scale: [1, 0.9], duration: 220, easing: "easeInQuad",
+          complete: function () { tasks.splice(i, 1); saveData(); renderTasks(); } });
+      };
       li.appendChild(box); li.appendChild(span); li.appendChild(edit); li.appendChild(del);
       list.appendChild(li);
     })(i);
@@ -229,6 +334,7 @@ function renderTasks() {
   document.getElementById("taskEmpty").className = tasks.length === 0 ? "empty" : "hide";
   drawPie(document.getElementById("taskPie"), doneCount, tasks.length);
   renderTaskHistory();
+  tween({ targets: "#taskList li", opacity: [0, 1], translateY: [8, 0], delay: anime.stagger(35), duration: 260, easing: "easeOutQuad" });
 }
 
 function renderTaskHistory() {
@@ -297,12 +403,18 @@ function renderHabits() {
       span.className = "t";
       span.textContent = h.type === "number" ? h.name + " (goal " + h.goal + ")" : h.name;
       var streak = getStreak(h);
-      if (streak > 1) { span.textContent += "  🔥" + streak; }
+      if (streak > 1) { span.innerHTML = escapeHtml(span.textContent) + '  <span class="flame streak">🔥' + streak + "</span>"; }
       if (h.type === "check") {
         var box = document.createElement("input");
         box.type = "checkbox"; box.checked = value === true;
         box.setAttribute("aria-label", "Mark done: " + h.name);
-        box.onchange = function () { log[h.id] = box.checked; saveData(); renderHabits(); };
+        box.onchange = function () {
+          log[h.id] = box.checked; saveData();
+          if (box.checked && !REDUCE_MOTION) {
+            tween({ targets: box, scale: [1, 1.5, 1], duration: 320, easing: "easeOutElastic(1, .6)" });
+            setTimeout(renderHabits, 180);
+          } else { renderHabits(); }
+        };
         li.appendChild(box); li.appendChild(span);
       } else {
         var num = document.createElement("input");
@@ -320,9 +432,10 @@ function renderHabits() {
       var del = document.createElement("button");
       del.className = "small"; del.textContent = "Delete";
       del.onclick = function () {
-        if (confirm("Delete habit '" + h.name + "' and its history?")) {
-          data.habits.splice(i, 1); saveData(); renderHabits();
-        }
+        if (!confirm("Delete habit '" + h.name + "' and its history?")) { return; }
+        if (REDUCE_MOTION) { data.habits.splice(i, 1); saveData(); renderHabits(); return; }
+        tween({ targets: li, opacity: [1, 0], translateX: [0, 40], scale: [1, 0.9], duration: 220, easing: "easeInQuad",
+          complete: function () { data.habits.splice(i, 1); saveData(); renderHabits(); } });
       };
       li.appendChild(del);
       list.appendChild(li);
@@ -333,6 +446,10 @@ function renderHabits() {
   renderGraphChoices();
   drawLine();
   renderWeek();
+  tween({ targets: "#habitList li", opacity: [0, 1], translateY: [8, 0], delay: anime.stagger(35), duration: 260, easing: "easeOutQuad" });
+  if (!REDUCE_MOTION) {
+    anime({ targets: "#habitList .flame", scale: [1, 1.12], duration: 850, direction: "alternate", loop: true, easing: "easeInOutSine" });
+  }
 }
 
 // ---------- streaks and week view ----------
@@ -447,6 +564,19 @@ function drawLine() {
   c.beginPath(); c.moveTo(left, yPos(habit.goal)); c.lineTo(right, yPos(habit.goal)); c.stroke();
   c.setLineDash([]);
 
+  // area fill under the line, for depth
+  var grad = c.createLinearGradient(0, top, 0, bottom);
+  grad.addColorStop(0, css("--accent") + "55"); grad.addColorStop(1, css("--accent") + "00");
+  c.beginPath();
+  var areaStarted = false, lastX = left;
+  for (var f = 0; f < days.length; f++) {
+    if (days[f].value === null) { continue; }
+    if (!areaStarted) { c.moveTo(xPos(f), bottom); c.lineTo(xPos(f), yPos(days[f].value)); areaStarted = true; }
+    else { c.lineTo(xPos(f), yPos(days[f].value)); }
+    lastX = xPos(f);
+  }
+  if (areaStarted) { c.lineTo(lastX, bottom); c.closePath(); c.fillStyle = grad; c.fill(); }
+
   // joined points
   c.strokeStyle = css("--accent"); c.lineWidth = 3;
   c.beginPath();
@@ -464,18 +594,68 @@ function drawLine() {
   }
 }
 
+// ---------- notes ----------
+var noteTimer = null;
+function renderNotes() {
+  var box = document.getElementById("notesInput");
+  box.value = data.notes[today] || "";
+  document.getElementById("notesSaved").textContent = "";
+  renderNoteHistory();
+}
+document.getElementById("notesInput").oninput = function () {
+  var box = this;
+  data.notes[today] = box.value;
+  var msg = document.getElementById("notesSaved");
+  msg.textContent = "Saving...";
+  clearTimeout(noteTimer);
+  noteTimer = setTimeout(function () {
+    if (box.value.trim() === "") { delete data.notes[today]; }
+    saveData();
+    msg.textContent = "Saved ✓";
+  }, 500);
+};
+function renderNoteHistory() {
+  var box = document.getElementById("notesHistory");
+  box.innerHTML = "";
+  var dates = Object.keys(data.notes).sort().reverse();
+  var shown = 0;
+  for (var i = 0; i < dates.length; i++) {
+    var day = dates[i];
+    if (day === today) { continue; }
+    var text = data.notes[day];
+    if (!text || text.trim() === "") { continue; }
+    var d = document.createElement("details");
+    var p = document.createElement("div");
+    p.style.whiteSpace = "pre-wrap"; p.style.marginTop = "6px";
+    p.textContent = text;
+    var s = document.createElement("summary");
+    s.textContent = day;
+    d.appendChild(s); d.appendChild(p);
+    box.appendChild(d);
+    shown++;
+  }
+  if (shown === 0) { box.innerHTML = '<p class="empty">Past notes will show up here.</p>'; }
+}
+
 // ---------- tabs ----------
 function showTab(name) {
   currentTab = name;
-  var isTodo = name === "todo";
-  document.getElementById("todoPage").className = isTodo ? "" : "hide";
-  document.getElementById("habitPage").className = isTodo ? "hide" : "";
-  document.getElementById("tabTodo").className = isTodo ? "on" : "";
-  document.getElementById("tabHabit").className = isTodo ? "" : "on";
-  if (isTodo) { renderTasks(); } else { renderHabits(); }
+  var ids = { todo: "todoPage", habit: "habitPage", notes: "notesPage" };
+  var showEl = document.getElementById(ids[name]);
+  for (var key in ids) {
+    if (key !== name) { document.getElementById(ids[key]).className = "hide"; }
+  }
+  showEl.className = "";
+  document.getElementById("tabTodo").className = name === "todo" ? "on" : "";
+  document.getElementById("tabHabit").className = name === "habit" ? "on" : "";
+  document.getElementById("tabNotes").className = name === "notes" ? "on" : "";
+  tween({ targets: showEl, opacity: [0, 1], translateY: [6, 0], duration: 260, easing: "easeOutQuad" });
+  tween({ targets: showEl.querySelectorAll(".card"), opacity: [0, 1], translateY: [14, 0], delay: anime.stagger(60), duration: 320, easing: "easeOutQuad" });
+  if (name === "todo") { renderTasks(); } else if (name === "habit") { renderHabits(); } else { renderNotes(); }
 }
 document.getElementById("tabTodo").onclick = function () { showTab("todo"); };
 document.getElementById("tabHabit").onclick = function () { showTab("habit"); };
+document.getElementById("tabNotes").onclick = function () { showTab("notes"); };
 
 // ---------- backup ----------
 document.getElementById("exportBtn").onclick = function () {
@@ -525,6 +705,7 @@ async function pullFromCloud() {
   if (result.error) { setSync("Sync failed (saved on this device)"); return; }
   if (result.data) {
     data = result.data.data;
+    if (!data.notes) { data.notes = {}; }
     try { localStorage.setItem("myTrackerData", JSON.stringify(data)); } catch (e) { }
     setSync("Synced ✓");
     showTab(currentTab);
@@ -555,7 +736,10 @@ async function doLogin(isSignUp) {
 }
 
 async function startCloud() {
-  if (!window.supabase || SUPABASE_URL.indexOf("PASTE") === 0) { return; }   // no setup yet: stay local-only
+  if (!window.supabase || SUPABASE_URL.indexOf("PASTE") === 0) {
+    setSync("Cloud sync not set up yet — saved on this device only");
+    return;   // no setup yet: stay local-only, but keep the sign-in box visible
+  }
   db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   document.getElementById("signInBtn").onclick = function () { doLogin(false); };
   document.getElementById("signUpBtn").onclick = function () { doLogin(true); };
